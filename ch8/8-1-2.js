@@ -1,7 +1,11 @@
 export class Account {
-  constructor(accountType, daysOverdrawn) {
-    this.type = accountType;
+  constructor(type, daysOverdrawn) {
+    this._type = type
     this._daysOverdrawn = daysOverdrawn;
+  }
+
+  get isPremium() {
+    return this._type === 'Premium';
   }
 
   get bankCharge() {
@@ -11,11 +15,10 @@ export class Account {
   }
 
   get overdraftCharge() {
-    if (this.type.isPremium) {
-      const baseCharge = 10;
-      if (this._daysOverdrawn <= 7) return baseCharge;
-      else return baseCharge + (this._daysOverdrawn - 7) * 0.85;
-    } else return this._daysOverdrawn * 1.75;
+    if(!this.isPremium) return this._daysOverdrawn * 1.75;
+
+    const baseCharge = 10;
+    return this._daysOverdrawn <= 7 ? baseCharge : baseCharge + (this._daysOverdrawn - 7) * 0.85;
   }
 
   get daysOverdrawn() {
